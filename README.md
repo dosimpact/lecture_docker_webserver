@@ -1,5 +1,18 @@
 # react build > docker nginx webserver
 
+# 1. react build
+
+```js
+nginx 이미지에는 node가 없으므로 build 환경이 안된다. 불편하지만, build파일을 깃허브에 올리고, 클론하는 방법을 쓰자.
+
+.gitignore /build 제외
+
+yarn start
+yarn build
+git push origin master
+
+```
+
 # docker
 
 ```js
@@ -8,10 +21,35 @@ docker run -it -p 3002:80 --name webserver nginx
 docker exec -it webserver bash
 ```
 
+# in nginx container
+
 ```js
-sites-available : 가상 서버 환경들에 대한 설정 파일들이 위치하는 부분입니다. 가상 서버를 사용하거나 사용하지 않던간에 그에 대한 설정 파일들이 위치하는 곳이다.
+apt-get update
+apt-get install -y vim # 설정파일 변경
+apt-get install -y git # 깃 클론을 위해
 
-sites-enabled : sites-available 에 있는 가상 서버 파일들중에서 실행시키고 싶은 파일을 symlink로 연결한 폴더입니다. 실제로 이 폴더에 위치한 가상서버 환경 파일들을 읽어서 서버를 세팅합니다.
+// 클론
 
-nginx.conf : Nginx에 관한 설정파일로 Nginx 설정에 관한 블록들이 작성되어 있으며 이 파일에서 sites-enabled 폴더에 있는 파일들을 가져옵니다.
+mkdir /var/www/
+cd /var/www/
+git clone origin <your-repo>
+cp <reponame>/build ./
+
+// nginx 설정 - index.html 위치
+
+cd /etc/nginx
+cd ./conf.d/
+root@ccf372b70d8d:/etc/nginx/conf.d# cat default.conf
+server {
+    listen       80;
+    server_name  localhost;
+
+    #charset koi8-r;
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    location / {
+        root   /var/www/build/;
+        index  index.html index.htm;
+    }
+    ...
 ```
