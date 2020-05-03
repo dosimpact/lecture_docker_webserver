@@ -16,7 +16,7 @@ git push origin master
 
 ```
 
-# docker
+# 2. docker
 
 ```js
 docker pull nginx
@@ -24,7 +24,7 @@ docker run -it -p 3002:80 --name webserver nginx
 docker exec -it webserver bash
 ```
 
-# in nginx container
+# 3. in nginx container
 
 ```js
 apt-get update
